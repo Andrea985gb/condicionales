@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ejercicios: arrays, ciclos y condicionales</title>
+  <meta name="description" content="Colección de ejercicios interactivos: contar >50, encuesta de frutas, calculadora, carrito, registro de estudiantes y juego 'adivina el número'." />
+  <style>
+    /* =====================
+       Estilos (CSS)
+       Pastel, responsivo y limpio
+       ===================== */
+    :root{
+      --bg: #fbf8ff;
+      --card:#fff;
+      --muted:#7b6f90;
+      --accent:#b9f6ca;
+      --accent-2:#ffd6e0;
+      --glass: rgba(255,255,255,0.7);
+      --radius:14px;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:linear-gradient(180deg,var(--bg),#fff); color:#2b2435; padding:28px;
+      -webkit-font-smoothing:antialiased;
+    }
+    .wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:18px}
+    header{display:flex;align-items:center;gap:16px}
+    header .logo{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#402c4b}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:0;color:var(--muted)}
+
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+    .card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:0 6px 18px rgba(33,22,44,0.06);}
+    .card h2{margin:0 0 8px 0;font-size:16px}
+    small{color:var(--muted)}
+
+    /* Form styles */
+    label{display:block;font-weight:600;margin-top:8px}
+    input[type=text],input[type=number],select{width:100%;padding:10px;border-radius:10px;border:1px solid #eee;margin-top:6px}
+    button{padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,#a6e6a4,#ffd0d8);cursor:pointer;font-weight:600}
+    .row{display:flex;gap:8px;align-items:center}
+    .muted{color:var(--muted);font-size:13px}
+
+    /* product list */
+    .products{display:flex;flex-direction:column;gap:10px}
+    .product{display:flex;gap:12px;align-items:center;padding:8px;border-radius:12px;background:linear-gradient(180deg,rgba(240,240,255,0.6),transparent)}
+    .product img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:4px solid rgba(255,255,255,0.6)}
+
+    ul{padding-left:18px}
+    table{width:100%;border-collapse:collapse}
+    td,th{padding:6px;border-bottom:1px dashed #eee}
+
+    .result{margin-top:10px;padding:10px;border-radius:10px;background:var(--glass)}
+
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">JS</div>
+      <div>
+        <h1>Ejercicios: arrays, ciclos y condicionales</h1>
+        <p class="lead">Interfaz completa con 6 ejercicios interactivos — hecha para practicar lógica en JavaScript.</p>
+      </div>
+    </header>
+
+    <section class="grid">
+      <!-- 1. Contar >50 -->
+      <article class="card">
+        <h2>1) Contar cuántos elementos > 50</h2>
+        <small>Genera un array de 10 números aleatorios entre 1 y 100 y cuenta los mayores a 50.</small>
+        <div style="margin-top:10px">
+          <div class="row">
+            <button id="genArrayBtn">Generar array</button>
+            <button id="regenArrayBtn">Regenerar</button>
+          </div>
+          <div class="result" id="arrayResult"></div>
+        </div>
+      </article>
+
+      <!-- 2. Formulario de encuesta -->
+      <article class="card">
+        <h2>2) Encuesta de fruta favorita</h2>
+        <small>Escribe el nombre de una fruta. Si existe, mostramos su info; si no, mostramos 5 frutas de Guatemala.</small>
+        <label for="fruitInput">Fruta:</label>
+        <input id="fruitInput" type="text" placeholder="Ej: aguacate" />
+        <div style="margin-top:8px" class="row">
+          <button id="checkFruitBtn">Buscar</button>
+        </div>
+        <div class="result" id="fruitResult"></div>
+      </article>
+
+      <!-- 3. Calculadora básica -->
+      <article class="card">
+        <h2>3) Calculadora básica</h2>
+        <label>Numero A</label>
+        <input id="calcA" type="number" value="0" />
+        <label>Numero B</label>
+        <input id="calcB" type="number" value="0" />
+        <label>Operacion</label>
+        <select id="opSelect">
+          <option value="+">Sumar (+)</option>
+          <option value="-">Restar (−)</option>
+          <option value="*">Multiplicar (×)</option>
+          <option value="/">Dividir (÷)</option>
+        </select>
+        <div style="margin-top:8px" class="row">
+          <button id="calcBtn">Calcular</button>
+        </div>
+        <div class="result" id="calcResult"></div>
+      </article>
+
+      <!-- 4. Carrito simple -->
+      <article class="card">
+        <h2>4) Carrito de compras</h2>
+        <small>Selecciona productos con su precio. Muestra total y lista.</small>
+        <div class="products" id="productList">
+          <!-- productos generados por JS -->
+        </div>
+        <div style="margin-top:8px" class="row">
+          <button id="checkoutBtn">Mostrar selección</button>
+        </div>
+        <div class="result" id="cartResult"></div>
+      </article>
+
+      <!-- 5. Registro de estudiantes -->
+      <article class="card">
+        <h2>5) Registro de estudiantes</h2>
+        <label>Nombre</label>
+        <input id="studentName" type="text" placeholder="Ej: Maria" />
+        <label>Nota (0-100)</label>
+        <input id="studentGrade" type="number" min="0" max="100" value="75" />
+        <div style="margin-top:8px" class="row">
+          <button id="addStudentBtn">Agregar estudiante</button>
+        </div>
+        <div class="result" id="studentsResult"></div>
+      </article>
+
+      <!-- 6. Adivina el número -->
+      <article class="card">
+        <h2>6) Juego: Adivina el número (1-50)</h2>
+        <small>Tienes intentos ilimitados; el sistema da pistas.</small>
+        <div class="row" style="margin-top:8px">
+          <input id="guessInput" type="number" min="1" max="50" placeholder="Tu intento" />
+          <button id="guessBtn">Probar</button>
+          <button id="newGameBtn">Nuevo juego</button>
+        </div>
+        <div class="result" id="guessResult"></div>
+      </article>
+
+    </section>
+
+    <footer>Hecho con ♥ para practicar JavaScript — si quieres que lo separe en archivos .html/.css/.js te lo preparo.</footer>
+  </div>
+
+  <script>
+    /* =====================
+       LÓGICA (JavaScript)
+       ===================== */
+
+    // 1) Contar > 50
+    const arrayResult = document.getElementById('arrayResult');
+    function generarArray(){
+      const arr = Array.from({length:10},()=>Math.floor(Math.random()*100)+1);
+      const mayores = arr.filter(n=>n>50).length;
+      arrayResult.innerHTML = `<strong>Array:</strong> [${arr.join(', ')}]<br><strong>Mayores a 50:</strong> ${mayores}`;
+      return arr;
+    }
+    document.getElementById('genArrayBtn').addEventListener('click',()=>generarArray());
+    document.getElementById('regenArrayBtn').addEventListener('click',()=>generarArray());
+
+    // Auto-generate once
+    generarArray();
+
+    // 2) Encuesta de frutas
+    const frutasDB = [
+      {name:'aguacate',desc:'Fruta cremosa y nutritiva, usada en guacamole.',img:'🥑'},
+      {name:'mango',desc:'Dulce y jugoso, muy consumido en temporada.',img:'🥭'},
+      {name:'plátano',desc:'Energético y muy común en Guatemala.',img:'🍌'},
+      {name:'zapote',desc:'Fruta dulce con pulpa suave.',img:'🍈'},
+      {name:'mamón',desc:'Fruta tropical de pulpa jugosa.',img:'🟠'}
+    ];
+    const guateFrutas = [
+      {name:'mora',desc:'Pequeña y ácida, usada en postres.',img:'🫐'},
+      {name:'guayaba',desc:'Aromática, con muchas semillas.',img:'🍐'},
+      {name:'nance',desc:'Pequeña y amarilla, se consume en dulces.',img:'🍊'},
+      {name:'tamarindo',desc:'Agridulce, se usa en bebidas.',img:'🌰'},
+      {name:'capulín',desc:'Pequeña fruta roja, parecida a la cereza.',img:'🍒'}
+    ];
+
+    document.getElementById('checkFruitBtn').addEventListener('click',()=>{
+      const q = document.getElementById('fruitInput').value.trim().toLowerCase();
+      const out = document.getElementById('fruitResult');
+      if(!q){
+        out.innerHTML = '<em class="muted">Escribe una fruta para buscar.</em>';
+        return;
+      }
+      const found = frutasDB.find(f=>f.name===q);
+      if(found){
+        out.innerHTML = `<div style="display:flex;gap:10px;align-items:center"><div style=\"font-size:42px\">${found.img}</div><div><strong>${found.name}</strong><div class=\"muted\">${found.desc}</div></div></div>`;
+      } else {
+        out.innerHTML = `<strong>No encontrada.</strong> Aquí 5 frutas de Guatemala:` +
+          '<ul>' + guateFrutas.map(f=>`<li><span style="font-size:20px">${f.img}</span> <strong>${f.name}</strong> - ${f.desc}</li>`).join('') + '</ul>';
+      }
+    });
+
+    // 3) Calculadora
+    document.getElementById('calcBtn').addEventListener('click',()=>{
+      const a = parseFloat(document.getElementById('calcA').value)||0;
+      const b = parseFloat(document.getElementById('calcB').value)||0;
+      const op = document.getElementById('opSelect').value;
+      let r;
+      switch(op){
+        case '+': r = a+b; break;
+        case '-': r = a-b; break;
+        case '*': r = a*b; break;
+        case '/': r = b===0? 'Error: división por cero' : a/b; break;
+      }
+      document.getElementById('calcResult').textContent = `Resultado: ${r}`;
+    });
+
+    // 4) Carrito
+    const products = [
+      {id:1,name:'Laptop',price:850},
+      {id:2,name:'Mouse',price:18},
+      {id:3,name:'Teclado',price:45},
+      {id:4,name:'Auriculares',price:29},
+      {id:5,name:'Monitor',price:190}
+    ];
+    const productList = document.getElementById('productList');
+    products.forEach(p=>{
+      const el = document.createElement('label');
+      el.className='product';
+      el.innerHTML = `<input type="checkbox" data-id="${p.id}" data-price="${p.price}" />
+        <div style="display:flex;gap:10px;align-items:center">
+          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><rect rx='28' width='56' height='56' fill='%23f0eef8'/><text x='50%' y='55%' font-size='12' text-anchor='middle' fill='%23414a5a' font-family='Arial' dy='.3em'>${encodeURIComponent(p.name.charAt(0))}</text></svg>" alt="${p.name}" />
+          <div><strong>${p.name}</strong><div class="muted">Q ${p.price.toFixed(2)}</div></div>
+        </div>`;
+      productList.appendChild(el);
+    });
+
+    document.getElementById('checkoutBtn').addEventListener('click',()=>{
+      const checkboxes = productList.querySelectorAll('input[type=checkbox]');
+      const selected = [];
+      let total = 0;
+      checkboxes.forEach(cb=>{
+        if(cb.checked){
+          const id = parseInt(cb.dataset.id);
+          const price = parseFloat(cb.dataset.price);
+          const p = products.find(x=>x.id===id);
+          selected.push(p.name);
+          total += price;
+        }
+      });
+      const out = document.getElementById('cartResult');
+      if(selected.length===0) out.innerHTML = '<em class="muted">No hay productos seleccionados.</em>';
+      else out.innerHTML = `<strong>Seleccionados:</strong> ${selected.join(', ')}<br><strong>Total:</strong> Q ${total.toFixed(2)}`;
+    });
+
+    // 5) Registro de estudiantes
+    const students = [];
+    const studentsResult = document.getElementById('studentsResult');
+    function renderStudents(){
+      if(students.length===0){ studentsResult.innerHTML = '<em class="muted">Aún no hay estudiantes registrados.</em>'; return; }
+      studentsResult.innerHTML = '<table><tr><th>Nombre</th><th>Nota</th><th>Estado</th></tr>' +
+        students.map(s=>`<tr><td>${s.name}</td><td>${s.grade}</td><td>${s.grade>=60?'<strong>Aprobado</strong>':'<strong>Reprobado</strong>'}</td></tr>`).join('') + '</table>';
+    }
+    document.getElementById('addStudentBtn').addEventListener('click',()=>{
+      const name = document.getElementById('studentName').value.trim();
+      const grade = parseFloat(document.getElementById('studentGrade').value);
+      if(!name){ alert('Ingresa nombre'); return; }
+      if(isNaN(grade) || grade<0 || grade>100){ alert('Ingresa una nota válida 0-100'); return; }
+      students.push({name,grade});
+      document.getElementById('studentName').value='';
+      document.getElementById('studentGrade').value=75;
+      renderStudents();
+    });
+    renderStudents();
+
+    // 6) Adivina el número
+    let secret = Math.floor(Math.random()*50)+1;
+    const guessResult = document.getElementById('guessResult');
+    function resetGame(){
+      secret = Math.floor(Math.random()*50)+1;
+      guessResult.innerHTML = '<em class="muted">Juego reiniciado. Ingresa un número entre 1 y 50.</em>';
+    }
+    document.getElementById('newGameBtn').addEventListener('click',resetGame);
+    document.getElementById('guessBtn').addEventListener('click',()=>{
+      const v = parseInt(document.getElementById('guessInput').value,10);
+      if(isNaN(v) || v<1 || v>50){ guessResult.innerHTML = '<span style="color:#b00020">Ingresa un número entre 1 y 50.</span>'; return; }
+      if(v===secret){ guessResult.innerHTML = `<strong>¡Correcto! 🎉 El número es ${secret}.</strong> Haz clic en "Nuevo juego" para jugar otra vez.`; }
+      else if(v<secret) guessResult.innerHTML = 'El número es mayor. ↑';
+      else guessResult.innerHTML = 'El número es menor. ↓';
+    });
+    // mensaje inicial
+    guessResult.innerHTML = '<em class="muted">Listo — haz tus intentos.</em>';
+
+  </script>
+</body>
+</html>
